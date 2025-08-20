@@ -1,0 +1,4 @@
+.idea
+bindings
+cmake-build-release
+CMakeUserPresets.json
