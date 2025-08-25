@@ -1,4 +1,6 @@
 .idea
 bindings
 cmake-build-release
+cmake-build-clang
+bindings
 CMakeUserPresets.json

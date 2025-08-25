@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 if(CMAKE_HOST_SYSTEM MATCHES Apple)
-    add_link_options("-Wl,-no_compact_unwind")
+#    add_link_options("-Wl,-no_compact_unwind")
 endif()
 
 include_directories(./bindings)
@@ -33,8 +33,13 @@ include_directories(
 )
 
 file(GLOB sources CONFIGURE_DEPENDS
+        "bindings/*.cpp"
         "src/*.cpp"
-        "src/*.h")
+        "src/core/*.cpp"
+        "src/graphics/*.cpp"
+        "src/game/*.cpp"
+        "src/platform/*/*.cpp"
+)
 
 add_executable(TOG ${sources})
 

@@ -5,10 +5,9 @@ from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
 from conan.tools.files import copy
 
 
-class ImGuiExample(ConanFile):
+class TOG(ConanFile):
     description = "ConanFile for TOG"
     settings = "os", "compiler", "build_type", "arch"
-
     def requirements(self):
         self.requires("imgui/1.92.0")
         self.requires("glfw/3.4")
@@ -40,7 +39,6 @@ class ImGuiExample(ConanFile):
         if self.settings.os == "Macos":
             self.options["glad"].gl_version = "4.1"
             self.options["fastnoise2"].shared = "True"
-
     def layout(self):
         cmake_layout(self)
 
