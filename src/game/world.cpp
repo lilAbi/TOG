@@ -1,7 +1,6 @@
 #include "world.h"
 
 bool World::init() {
-
     //load from memory
 
     return true;
@@ -23,8 +22,3 @@ void World::tick(SceneGraph* sg, glm::vec3 playerPosition) {
     //      if chunk is not able to be loaded, then lets go ahead and generate it
 
 }
-
-glm::ivec2 World::calculatePlayerCurrentChunkIndex(glm::vec3 playerPosition) {
-    return glm::ivec2{static_cast<int>(std::floor(playerPosition.x/CHUNK_MAX_X)), static_cast<int>(std::floor(playerPosition.z/CHUNK_MAX_Z))};
-}
-
