@@ -3,6 +3,7 @@
 bool World::init() {
     //load from memory
 
+
     return true;
 }
 
@@ -14,6 +15,12 @@ void World::tick(SceneGraph* sg, glm::vec3 playerPosition) {
     //load and unload chunks around the player location
     if (const auto index = calculatePlayerCurrentChunkIndex(playerPosition); index != playerLastChunkIndex) {
         spdlog::info("Players current chunk index {},{}", index.x, index.y);
+
+        //grab the chunk indices that are going to be generated
+        auto inRangeChunkIndices = listChunkIndicesAroundCenterSimple(index, 3);
+
+        //
+
 
         playerLastChunkIndex = index;
     }
