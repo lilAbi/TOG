@@ -10,19 +10,32 @@ bool World::init() {
 //handles chunk generation
 //handles chunk meshing
 //handles updating the scene graph
-void World::tick(SceneGraph* sg, glm::vec3 playerPosition) {
+void World::tick(glm::vec3 playerPosition) {
 
     //load and unload chunks around the player location
-    if (const auto index = calculatePlayerCurrentChunkIndex(playerPosition); index != playerLastChunkIndex) {
-        spdlog::info("Players current chunk index {},{}", index.x, index.y);
+    if (const auto currPlayerChunkIndex = calculatePlayerCurrentChunkIndex(playerPosition); currPlayerChunkIndex != playerLastChunkIndex) {
+        spdlog::info("Players current chunk index {},{}", currPlayerChunkIndex.x, currPlayerChunkIndex.y);
 
-        //grab the chunk indices that are going to be generated
-        auto inRangeChunkIndices = listChunkIndicesAroundCenterSimple(index, 3);
+        //grab the chunk indices that are around the current player
+        std::vector<glm::ivec2> activeChunkIndices = listChunkIndicesAroundCenterSimple(currPlayerChunkIndex, 3);
 
         //
+        for (glm::ivec2& activeChunkIndex : activeChunkIndices) {
+            glm::ivec2 deltaIndex = activeChunkIndex - currPlayerChunkIndex;
+            //do we load or do we generate
+            if (canLoadChunk(activeChunkIndex)) {
+                //load chunk
+                //loadChunkFromDisk(chunks[deltaIndex], activeChunkIndex);
+            } else {
+                //generate chunk
+                //chunkBuilder.chunkbuild(activeChunkIndex, chunks[deltaIndex])
+                //
+            }
+
+        }
 
 
-        playerLastChunkIndex = index;
+        playerLastChunkIndex = currPlayerChunkIndex;
     }
     //if the player is not in the last chunk coordinate
     //  update the scene graph to unload/load the chunks that are in the range

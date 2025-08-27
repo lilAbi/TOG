@@ -16,5 +16,5 @@ void Game::tick(glm::vec3 playerPosition) {
     //update game state
     //update game ui
     //tick the world
-    world.tick(sceneGraph, playerPosition);
+    world.tick(playerPosition);
 }
