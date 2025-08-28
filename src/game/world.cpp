@@ -2,7 +2,9 @@
 
 bool World::init() {
     //load from memory
-
+    //chunkContainer = std::move(std::vector<Chunk>{WORLD_MAX_X*WORLD_MAX_Z});
+    //allocate enough memory up ahead
+    chunks.reserve(WORLD_MAX_X*WORLD_MAX_Z);
 
     return true;
 }
@@ -22,14 +24,14 @@ void World::tick(glm::vec3 playerPosition) {
         //
         for (glm::ivec2& activeChunkIndex : activeChunkIndices) {
             glm::ivec2 deltaIndex = activeChunkIndex - currPlayerChunkIndex;
+
             //do we load or do we generate
             if (canLoadChunk(activeChunkIndex)) {
                 //load chunk
                 //loadChunkFromDisk(chunks[deltaIndex], activeChunkIndex);
             } else {
                 //generate chunk
-                //chunkBuilder.chunkbuild(activeChunkIndex, chunks[deltaIndex])
-                //
+                chunkBuilder.generateChunkBlockData(chunks[deltaIndex], activeChunkIndex);
             }
 
         }
