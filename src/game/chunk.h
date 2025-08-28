@@ -18,12 +18,11 @@ enum class ChunkStatus {
 //container for chunk block data and mesh data
 class Chunk {
 public:
-    Chunk() = default;
-
-private:
+    Chunk();
+public:
     ChunkStatus chunkStatus{ChunkStatus::EMPTY};
-    std::vector<int> blockData{CHUNK_MAX_X*CHUNK_MAX_Y*CHUNK_MAX_Z, 0};
-    MeshNode meshNode;
+    std::vector<int> blockData;
+    MeshNode meshNode{};
 };
 
 
