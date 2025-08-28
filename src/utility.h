@@ -9,7 +9,7 @@ inline glm::ivec2 calculatePlayerCurrentChunkIndex(glm::vec3 playerPosition) {
     return glm::ivec2{static_cast<int>(std::floor(playerPosition.x/CHUNK_MAX_X)), static_cast<int>(std::floor(playerPosition.z/CHUNK_MAX_Z))};
 }
 
-std::vector<glm::ivec2> listChunkIndicesAroundCenter(const glm::ivec2 centerChunk, int radius) {
+inline std::vector<glm::ivec2> listChunkIndicesAroundCenter(const glm::ivec2 centerChunk, int radius) {
     //add the chunk index into a ring like format
     std::vector<std::vector<glm::ivec2>> rings(static_cast<std::size_t>(radius)+1);
     int count = 1;
@@ -33,8 +33,9 @@ std::vector<glm::ivec2> listChunkIndicesAroundCenter(const glm::ivec2 centerChun
     return out;
 }
 
-std::vector<glm::ivec2> listChunkIndicesAroundCenterSimple(const glm::ivec2 centerChunk, int radius) {
-    std::vector<glm::ivec2> out(static_cast<std::size_t>(radius*radius));
+inline std::vector<glm::ivec2> listChunkIndicesAroundCenterSimple(const glm::ivec2 centerChunk, int radius) {
+    std::vector<glm::ivec2> out;
+    out.reserve(radius*radius);
 
     for (int dz{-radius}; dz <= radius; dz++) {
         for (int dx{-radius}; dx <= radius; dx++) {
