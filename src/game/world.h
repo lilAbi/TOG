@@ -12,29 +12,24 @@
 #include <glm/gtx/hash.hpp>
 #include <spdlog/spdlog.h>
 #include <absl/container/flat_hash_map.h>
-#include <vector>
-
 
 
 constexpr int WORLD_MAX_X = 9;
 constexpr int WORLD_MAX_Z = 9;
 
-class World {
-private:
-    struct IVec2Eq {
-        bool operator()(const glm::ivec2& a, const glm::ivec2& b) const noexcept {
-            return a.x == b.x && a.y == b.y; // or: return glm::all(a == b);
-        }
-    };
+class SceneGraph;
 
+class World {
 public:
     World() = default;
 
     bool init();
 
-    void tick(glm::vec3 playerPosition);
+    void tick(glm::vec3 playerPosition, SceneGraph* sg);
 
     bool static canLoadChunk(glm::ivec2 chunkIndexToLoad) { return false; }
+
+    absl::flat_hash_map<glm::ivec2, Chunk, absl::Hash<glm::ivec2>, IVec2Eq>* getChunkContainer() {return &chunks;}
 
 private:
     //the chunk index that the player was last at

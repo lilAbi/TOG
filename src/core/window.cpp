@@ -5,7 +5,7 @@ static void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 
-bool Window::init() {
+bool Window::init(Camera* cam) {
     glfwInit();
 #ifdef __APPLE__
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -32,7 +32,7 @@ bool Window::init() {
 
     glfwSetFramebufferSizeCallback(glfwWindowPtr.get(), frameBufferSizeCallback);
     //glfwSetKeyCallback(glfwWindowPtr.get(), keyCallback);
-    //glfwSetCursorPosCallback(glfwWindowPtr.get(), cursorPositionCallback);
+    glfwSetCursorPosCallback(glfwWindowPtr.get(), cursorPositionCallback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         spdlog::critical("Failed to initialize GLAD");
@@ -40,6 +40,8 @@ bool Window::init() {
     }
 
     glEnable(GL_DEPTH_TEST);
+
+    camera = cam;
 
     return true;
 }
@@ -59,8 +61,26 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
-static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos) {
+static void cursorPositionCallback(GLFWwindow* window, double xPosIn, double yPosIn) {
     if(const auto* handle{static_cast<Window*>(glfwGetWindowUserPointer(window))}; handle) {
+        spdlog::critical("Mouse Movement");
         //handle->eventManager->publish( std::make_shared<MousePosEvent>(window, xpos, ypos) );
+
+        //this should only happen once
+        static bool firstMouse{true};
+        static float lastX{static_cast<float>(xPosIn)};
+        static float lastY{static_cast<float>(yPosIn)};
+
+        const auto xPos = static_cast<float>(xPosIn);
+        const auto yPos = static_cast<float>(yPosIn);
+
+        float xOffset = xPos - lastX;
+        float yOffset = lastY - yPos; // reversed since y-coordinates go from bottom to top
+
+        lastX = xPos;
+        lastY = yPos;
+
+        handle->camera->processMouseMovement(xOffset, yOffset);
+
     }
 }

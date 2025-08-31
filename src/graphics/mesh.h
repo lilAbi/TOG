@@ -2,9 +2,11 @@
 #define TOG_MESH_H
 
 #include <vector>
+#include "glm/glm.hpp"
 
 class Mesh {
-    std::vector<float> meshData;
+public:
+    std::vector<glm::vec3> meshData;
 };
 
 

@@ -22,7 +22,8 @@ public:
 public:
     ChunkStatus chunkStatus{ChunkStatus::EMPTY};
     std::vector<int> blockData;
-    MeshNode meshNode{};
+    Mesh mesh{};
+    bool dirty{false};
 };
 
 

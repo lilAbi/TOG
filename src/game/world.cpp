@@ -12,19 +12,15 @@ bool World::init() {
 //handles chunk generation
 //handles chunk meshing
 //handles updating the scene graph
-void World::tick(glm::vec3 playerPosition) {
-
+void World::tick(glm::vec3 playerPosition, SceneGraph* sg) {
     //load and unload chunks around the player location
     if (const auto currPlayerChunkIndex = calculatePlayerCurrentChunkIndex(playerPosition); currPlayerChunkIndex != playerLastChunkIndex) {
         spdlog::info("Players current chunk index {},{}", currPlayerChunkIndex.x, currPlayerChunkIndex.y);
 
         //grab the chunk indices that are around the current player
         std::vector<glm::ivec2> activeChunkIndices = listChunkIndicesAroundCenterSimple(currPlayerChunkIndex, 3);
-
-        //
         for (glm::ivec2& activeChunkIndex : activeChunkIndices) {
             glm::ivec2 deltaIndex = activeChunkIndex - currPlayerChunkIndex;
-
             //do we load or do we generate
             if (canLoadChunk(activeChunkIndex)) {
                 //load chunk
@@ -33,10 +29,12 @@ void World::tick(glm::vec3 playerPosition) {
                 //generate chunk
                 chunkBuilder.generateChunkBlockData(chunks[deltaIndex], activeChunkIndex);
             }
-
+            //does the chunk need to remesh?
+            if (chunks[deltaIndex].dirty == true) {
+                chunkBuilder.generateChunkMeshSimple(chunks[deltaIndex], activeChunkIndex);
+            }
         }
-
-
+        sg->redraw = true;
         playerLastChunkIndex = currPlayerChunkIndex;
     }
     //if the player is not in the last chunk coordinate

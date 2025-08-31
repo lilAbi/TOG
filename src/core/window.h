@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
+#include "graphics/camera.h"
 
 #include <memory>
 #include <functional>
@@ -19,12 +20,13 @@ private:
 public:
     Window() = default;
     //initialize glfw window
-    bool init();
+    bool init(Camera* cam);
     //return unique ptr to the glfw window
     GLFWwindow* getGLFWPtr() const { return glfwWindowPtr.get(); }
 public:
     int width;
     int height;
+    Camera* camera{nullptr};
 private:
     std::unique_ptr<GLFWwindow, GLFWWinPtrDeleter> glfwWindowPtr{nullptr};
 };

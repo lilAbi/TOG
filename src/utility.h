@@ -47,5 +47,10 @@ inline std::vector<glm::ivec2> listChunkIndicesAroundCenterSimple(const glm::ive
     return out;
 }
 
+struct IVec2Eq {
+    bool operator()(const glm::ivec2& a, const glm::ivec2& b) const noexcept {
+        return a.x == b.x && a.y == b.y; // or: return glm::all(a == b);
+    }
+};
 
 #endif //TOG_UTILITY_H

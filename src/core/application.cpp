@@ -6,13 +6,25 @@ bool Application::init() {
     spdlog::info("Initializing sub-systems");
 
     spdlog::info("Starting Initializing Window...");
-    if (!window.init()) {
+    if (!window.init(&camera)) {
         spdlog::critical("Failed Initializing Window");
         return false;
     }
     spdlog::info("Finished Initializing Window");
 
+    spdlog::info("Starting Initializing Renderer...");
+    if (!renderer.init()) {
+        spdlog::critical("Failed Initializing Renderer");
+        return false;
+    }
+    spdlog::info("Finished Initializing Renderer");
 
+    spdlog::info("Starting Initializing Game...");
+    if (!game.init(renderer.getSceneGraph())) {
+        spdlog::critical("Failed Initializing Game");
+        return false;
+    }
+    spdlog::info("Finished Initializing Game");
 
     return true;
 }
@@ -35,6 +47,8 @@ void Application::run() {
         //spdlog::info("Camera Position: {} {} {}", camera.position.x, camera.position.y, camera.position.z);
 
         game.tick(camera.position);
+
+        renderer.draw();
 
         glfwSwapBuffers(winPtr);
         glfwPollEvents();

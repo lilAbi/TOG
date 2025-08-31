@@ -16,7 +16,7 @@ class TOG(ConanFile):
         self.requires("spdlog/1.15.3")
         self.requires("boost/1.88.0")
         self.requires("fastnoise2/0.10.0-alpha")
-        self.requires("abseil/20250127.0")
+        self.requires("abseil/20250512.1")
 
     def generate(self):
         toolchain = CMakeToolchain(self)
@@ -38,7 +38,7 @@ class TOG(ConanFile):
             self.options["fastnoise2"].fPIC = "False"
         if self.settings.os == "Macos":
             self.options["glad"].gl_version = "4.1"
-            self.options["fastnoise2"].shared = "True"
+            self.options["fastnoise2"].shared = "False"
     def layout(self):
         cmake_layout(self)
 

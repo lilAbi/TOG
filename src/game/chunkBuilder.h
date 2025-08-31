@@ -19,7 +19,7 @@ public:
     //generate chunk block array data
     void generateChunkBlockData(Chunk& chunk, glm::ivec2 chunkIndex);
     //generate mesh vertex data for array - Simple
-    void generateChunkMeshSimple(Chunk& chunk, glm::ivec2 chunkIndex) {};
+    void generateChunkMeshSimple(Chunk& chunk, glm::ivec2 chunkIndex);
     //generate mesh vertex data for array - Greedy
     void generateChunkMeshGreedy(Chunk& chunk, glm::ivec2 chunkIndex) {};
 private:

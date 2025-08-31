@@ -2,6 +2,7 @@
 #define TOG_RENDERER_H
 
 #include "sceneGraph.h"
+#include "platform/opengl/shader.h"
 
 //this class handles drawing
 class Renderer {
@@ -13,8 +14,9 @@ public:
     SceneGraph* getSceneGraph() {return &sceneGraph;}
 
 private:
-    SceneGraph sceneGraph;
-
+    unsigned int VBO{}, VAO{};
+    Shader shader;
+    SceneGraph sceneGraph{};
 };
 
 
