@@ -15,7 +15,7 @@ class Camera {
 public:
     Camera(glm::vec3 pos, glm::vec3 _up);
 
-    glm::mat4 getViewMatrix(glm::vec3 position) const;
+    glm::mat4 getViewMatrix() const;
 
     void updateCameraVectors();
 

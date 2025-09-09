@@ -18,7 +18,7 @@ void World::tick(glm::vec3 playerPosition, SceneGraph* sg) {
         spdlog::info("Players current chunk index {},{}", currPlayerChunkIndex.x, currPlayerChunkIndex.y);
 
         //grab the chunk indices that are around the current player
-        std::vector<glm::ivec2> activeChunkIndices = listChunkIndicesAroundCenterSimple(currPlayerChunkIndex, 3);
+        std::vector<glm::ivec2> activeChunkIndices = listChunkIndicesAroundCenterSimple(currPlayerChunkIndex, 5);
         for (glm::ivec2& activeChunkIndex : activeChunkIndices) {
             glm::ivec2 deltaIndex = activeChunkIndex - currPlayerChunkIndex;
             //do we load or do we generate

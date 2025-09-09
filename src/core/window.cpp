@@ -28,7 +28,7 @@ bool Window::init(Camera* cam) {
     glfwMakeContextCurrent(glfwWindowPtr.get());
     glfwSetWindowUserPointer(glfwWindowPtr.get(), static_cast<void*>(this));
 
-    glfwSetInputMode(glfwWindowPtr.get(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(glfwWindowPtr.get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetFramebufferSizeCallback(glfwWindowPtr.get(), frameBufferSizeCallback);
     //glfwSetKeyCallback(glfwWindowPtr.get(), keyCallback);

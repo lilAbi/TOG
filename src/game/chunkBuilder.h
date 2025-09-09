@@ -24,6 +24,7 @@ public:
     void generateChunkMeshGreedy(Chunk& chunk, glm::ivec2 chunkIndex) {};
 private:
     FastNoise::SmartNode<FastNoise::Perlin> perlinNoise{FastNoise::New<FastNoise::Perlin>()};
+    FastNoise::SmartNode<FastNoise::FractalFBm> fractal{FastNoise::New<FastNoise::FractalFBm>()};
 };
 
 

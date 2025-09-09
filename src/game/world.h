@@ -5,7 +5,7 @@
 
 #include "chunk.h"
 #include "chunkBuilder.h"
-#include "utility.h"
+#include "../utility/utility.h"
 #include "graphics/sceneGraph.h"
 
 #include <glm/glm.hpp>

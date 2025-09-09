@@ -1,4 +1,6 @@
 #include "renderer.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "utility/stb_image.h"
 
 bool Renderer::init() {
     shader = Shader("/Users/abi/CLionProjects/TOG/resources/shader/vertex.glsl",
@@ -9,17 +11,18 @@ bool Renderer::init() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // texture coord attribute
+
+    spdlog::info("Building Texture Array");
+    buildTextureArray();
 
     return true;
 }
 
-void Renderer::draw() {
+void Renderer::draw(Camera& camera) {
     //todo: chunk mesh buffer are not clear before new mesh operation happens
     if (sceneGraph.chunksPtr) {
         spdlog::info("Starting Drawing...");
@@ -31,7 +34,7 @@ void Renderer::draw() {
         }
 
         spdlog::critical("This is the buffer size now: {}", bufferSize);
-        /*
+
         if (sceneGraph.redraw == true) {
             //buffer to hold data to the gpu
             std::vector<glm::vec3> buffer;
@@ -51,23 +54,42 @@ void Renderer::draw() {
         shader.use();
         glBindVertexArray(VAO);
 
-        glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(1920/2) / static_cast<float>(1080/2), 0.1f, 200.0f);
+        const glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(1920/2) / static_cast<float>(1080/2), 0.1f, 200.0f);
         shader.setMat4("projection", projection);
 
-        //glm::mat4 view = player.getViewMatrix();
+        const glm::mat4 view = camera.getViewMatrix();
 
         shader.setMat4("view", view);
 
-        glm::mat4 model = glm::mat4(1.0f);
+        constexpr auto model = glm::mat4(1.0f);
 
         shader.setMat4("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, bufferSize);
-        */
 
         spdlog::info("Finished Drawing!");
 
     } else {
         spdlog::critical("Drawing ERROR- Nothing to Draw!");
+    }
+}
+
+void Renderer::buildTextureArray() {
+    glGenTextures(1, &textureArray);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("/Users/abi/CLionProjects/TOG/resources/texture/grass_block_top.png", &width, &height, &nrChannels, 0);
+
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        spdlog::critical("FAILED TO LOAD IMAGE");
     }
 }

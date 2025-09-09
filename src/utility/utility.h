@@ -1,7 +1,7 @@
 #ifndef TOG_UTILITY_H
 #define TOG_UTILITY_H
 
-#include "game/chunk.h"
+#include "../game/chunk.h"
 #include <glm/glm.hpp>
 #include <vector>
 

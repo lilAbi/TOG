@@ -38,6 +38,7 @@ file(GLOB sources CONFIGURE_DEPENDS
         "src/core/*.cpp"
         "src/graphics/*.cpp"
         "src/game/*.cpp"
+        "src/utility/*.cpp"
         "src/platform/*/*.cpp"
 )
 

@@ -22,13 +22,11 @@ public:
     //initialize glfw window
     bool init(Camera* cam);
     //return unique ptr to the glfw window
-    GLFWwindow* getGLFWPtr() const { return glfwWindowPtr.get(); }
 public:
+    std::unique_ptr<GLFWwindow, GLFWWinPtrDeleter> glfwWindowPtr{nullptr};
     int width;
     int height;
     Camera* camera{nullptr};
-private:
-    std::unique_ptr<GLFWwindow, GLFWWinPtrDeleter> glfwWindowPtr{nullptr};
 };
 
 

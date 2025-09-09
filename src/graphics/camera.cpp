@@ -4,7 +4,7 @@ Camera::Camera(glm::vec3 pos, glm::vec3 _up) : up{_up}, worldUp(_up) {
     updateCameraVectors();
 }
 
-glm::mat4 Camera::getViewMatrix(glm::vec3 position) const {
+glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(position, position + front, up);
 }
 

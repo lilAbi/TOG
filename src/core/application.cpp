@@ -31,7 +31,7 @@ bool Application::init() {
 
 void Application::run() {
     spdlog::info("Starting Application Run Loop...");
-    GLFWwindow* winPtr = window.getGLFWPtr();
+    GLFWwindow* winPtr = window.glfwWindowPtr.get();
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
     while (!glfwWindowShouldClose(winPtr)) {
@@ -48,7 +48,7 @@ void Application::run() {
 
         game.tick(camera.position);
 
-        renderer.draw();
+        renderer.draw(camera);
 
         glfwSwapBuffers(winPtr);
         glfwPollEvents();
