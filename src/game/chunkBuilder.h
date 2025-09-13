@@ -5,7 +5,7 @@
 
 #include "FastNoise/FastNoise.h"
 #include <spdlog/spdlog.h>
-
+#include "utility/utility.h"
 
 /*
  *  The purpose of this class is to handle the

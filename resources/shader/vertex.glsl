@@ -11,7 +11,6 @@ out vec3 mColor;
 vec3 colorPicker() {
 
     int index = int(mod(int(gl_VertexID/6), 6));
-
     //int index = gl_VertexID;
 
     vec3 result = vec3(1.0f, 1.0f, 1.0f);
@@ -46,7 +45,5 @@ vec3 colorPicker() {
 
 void main() {
     gl_Position = projection * view * model * vec4(aPos, 1.0f);
-    //gl_Position = projection * view * mat4(1.0) * vec4(aPos, 1.0f);
-    //gl_Position = vec4(aPos, 1.0f);
     mColor = colorPicker();
 }

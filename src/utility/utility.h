@@ -53,4 +53,12 @@ struct IVec2Eq {
     }
 };
 
+
+inline int lookupTextureIndex(int currBlockID) {
+    switch (currBlockID) {
+        default:
+            return 0;
+    }
+}
+
 #endif //TOG_UTILITY_H

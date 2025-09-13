@@ -7,6 +7,7 @@
 class Mesh {
 public:
     std::vector<glm::vec3> meshData;
+    std::vector<glm::vec3> textureData;
 };
 
 

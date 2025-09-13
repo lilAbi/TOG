@@ -37,73 +37,116 @@ void ChunkBuilder::generateChunkMeshSimple(Chunk &chunk, glm::ivec2 chunkIndex) 
     //container for the vertex data about to make
     std::vector<glm::vec3> vertexData;
 
+    //container for the texture coordinates plus the texture index (u,v,index)
+    std::vector<glm::vec3> textureData;
+
     //iterate through the block data array
     for (int y{0}; y < CHUNK_MAX_Y; ++y) {
         for (int z{0}; z < CHUNK_MAX_Z; ++z) {
             for (int x{0}; x < CHUNK_MAX_X; ++x) {
                 //check if the block is empty- if so skip
+                int textureIndex{0};
                 if(const int currBlockID = chunk.blockData[x + (z * CHUNK_MAX_X) + (y * CHUNK_MAX_X * CHUNK_MAX_Z)]; currBlockID == 0){
                     continue;
+                } else {
+                    textureIndex = lookupTextureIndex(currBlockID);
                 }
+
                 // looking at z face from the front ----
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
+                textureData.emplace_back(0, 0, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
+                textureData.emplace_back(1, 1, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
 
                 // looking at z face from the back ----
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
 
                 // looking at x face from the right ----
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
+                textureData.emplace_back(0, 0, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
+                textureData.emplace_back(1, 1, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
 
                 //looking at the x face from the left
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
+                textureData.emplace_back(0, 0, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
-
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
 
                 //looking at the y face from the top
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
+                textureData.emplace_back(0, 0, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
+                textureData.emplace_back(1, 1, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
 
                 //looking at the y face from the bottom
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
+                textureData.emplace_back(0, 0, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
+                textureData.emplace_back(1, 1, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
 
             }
         }
     }
 
     chunk.mesh.meshData = std::move(vertexData);
+    chunk.mesh.textureData = std::move(textureData);
     chunk.dirty = false;
 }

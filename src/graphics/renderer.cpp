@@ -16,6 +16,9 @@ bool Renderer::init() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+
     spdlog::info("Building Texture Array");
     buildTextureArray();
 
@@ -38,6 +41,7 @@ void Renderer::draw(Camera& camera) {
         if (sceneGraph.redraw == true) {
             //buffer to hold data to the gpu
             std::vector<glm::vec3> buffer;
+            buffer.reserve(bufferSize);
             for (auto& chunk : *(sceneGraph.chunksPtr)) {
                 buffer.insert(buffer.end(), chunk.second.mesh.meshData.begin(), chunk.second.mesh.meshData.end());
             }
@@ -87,8 +91,9 @@ void Renderer::buildTextureArray() {
     unsigned char* data = stbi_load("/Users/abi/CLionProjects/TOG/resources/texture/grass_block_top.png", &width, &height, &nrChannels, 0);
 
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, width, height, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        //glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         spdlog::critical("FAILED TO LOAD IMAGE");
     }
