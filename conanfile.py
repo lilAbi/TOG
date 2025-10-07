@@ -9,14 +9,14 @@ class TOG(ConanFile):
     description = "ConanFile for TOG"
     settings = "os", "compiler", "build_type", "arch"
     def requirements(self):
-        self.requires("imgui/1.92.0")
+        self.requires("imgui/1.92.2b-docking")
         self.requires("glfw/3.4")
         self.requires("glad/0.1.36")
         self.requires("glm/1.0.1")
         self.requires("spdlog/1.15.3")
         self.requires("boost/1.88.0")
         self.requires("fastnoise2/0.10.0-alpha")
-        self.requires("abseil/20250512.1")
+        self.requires("abseil/20250814.0")
 
     def generate(self):
         toolchain = CMakeToolchain(self)
@@ -39,6 +39,9 @@ class TOG(ConanFile):
         if self.settings.os == "Macos":
             self.options["glad"].gl_version = "4.1"
             self.options["fastnoise2"].shared = "False"
+            self.options["abseil"].shared = "True"
+            self.options["abseil"].fPIC = "False"
+
     def layout(self):
         cmake_layout(self)
 

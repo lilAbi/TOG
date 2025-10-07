@@ -4,8 +4,9 @@
 enum class BlockType {
     AIR = 0,
     DIRT = 1,
-    STONE = 2,
-    WOOD = 3
+    WOOD = 2,
+    LEAVES = 3,
+    STONE = 4,
 };
 
 #endif //TOG_BLOCKTYPE_H

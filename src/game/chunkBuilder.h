@@ -22,8 +22,13 @@ public:
     void generateChunkMeshSimple(Chunk& chunk, glm::ivec2 chunkIndex);
     //generate mesh vertex data for array - Greedy
     void generateChunkMeshGreedy(Chunk& chunk, glm::ivec2 chunkIndex) {};
+
+private:
+    bool canBuildTree(glm::vec3 location);
 private:
     FastNoise::SmartNode<FastNoise::Perlin> perlinNoise{FastNoise::New<FastNoise::Perlin>()};
+    FastNoise::SmartNode<FastNoise::Perlin> treeNoise{FastNoise::New<FastNoise::Perlin>()};
+    FastNoise::SmartNode<FastNoise::Checkerboard> checkerBoardNoise{FastNoise::New<FastNoise::Checkerboard>()};
     FastNoise::SmartNode<FastNoise::FractalFBm> fractal{FastNoise::New<FastNoise::FractalFBm>()};
 };
 

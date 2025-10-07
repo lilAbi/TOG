@@ -56,6 +56,10 @@ struct IVec2Eq {
 
 inline int lookupTextureIndex(int currBlockID) {
     switch (currBlockID) {
+        case 3:
+            return 1;
+        case 4:
+            return 2;
         default:
             return 0;
     }

@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include "core/application.h"
 #include "spdlog/spdlog.h"
 

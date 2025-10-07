@@ -5,6 +5,8 @@ void ChunkBuilder::generateChunkBlockData(Chunk& chunk, glm::ivec2 chunkIndex) {
 
     std::array<float, CHUNK_MAX_X * CHUNK_MAX_Z> noiseValues{0};
 
+    std::array<float, CHUNK_MAX_X * CHUNK_MAX_Z> treeLocations{0};
+
     fractal->SetSource(perlinNoise);
     fractal->SetOctaveCount(5);
 
@@ -13,6 +15,13 @@ void ChunkBuilder::generateChunkBlockData(Chunk& chunk, glm::ivec2 chunkIndex) {
         static_cast<int>(chunkIndex.y * CHUNK_MAX_Z),
         CHUNK_MAX_X, CHUNK_MAX_Z, 0.01, 1337);
 
+    checkerBoardNoise->GenUniformGrid2D(treeLocations.data(),
+        static_cast<int>(chunkIndex.x * CHUNK_MAX_X),
+        static_cast<int>(chunkIndex.y * CHUNK_MAX_Z),
+        CHUNK_MAX_X, CHUNK_MAX_Z, 1.5, 1337);
+
+
+    //pass 1 - generate the base terrain
     //use height map to define shape of the terrain
     for (int y{0}; y < CHUNK_MAX_Y; y++ ) {
         for (int z{0}; z < CHUNK_MAX_Z; z++) {
@@ -23,6 +32,44 @@ void ChunkBuilder::generateChunkBlockData(Chunk& chunk, glm::ivec2 chunkIndex) {
             }
         }
     }
+
+    //pass 2 - build trees on top of the
+    for (int z{0}; z < CHUNK_MAX_Z; z++) {
+        for (int x{0}; x < CHUNK_MAX_X; x++) {
+            //check if we should make a tree at this location
+            bool makeTree = (treeLocations[x + (z * CHUNK_MAX_X)] * 10 > 5);
+
+            //check if we can make a tree at that location
+            if (makeTree) {
+                //scan through the chunk block data
+                for (int y{0}; y < CHUNK_MAX_Y; y++) {
+                    //if a ground block is found
+                    if (chunk.blockData[x + (z * CHUNK_MAX_X) + (y * CHUNK_MAX_X * CHUNK_MAX_Z)] == 1) {
+                        auto canBuild = canBuildTree(glm::vec3(x, y, z));
+                        //check if we can build a tree at this location
+                        if (canBuild) {
+                            //set block types to wood
+                            for (int dy = 0; dy < 5; dy++) {
+                                chunk.blockData[x + (z * CHUNK_MAX_X) + ((y+dy+1) * CHUNK_MAX_X * CHUNK_MAX_Z)] = 3;
+                            }
+
+                            //set the very top of the block as a leaf
+                            chunk.blockData[x + (z * CHUNK_MAX_X) + ((y+4+1) * CHUNK_MAX_X * CHUNK_MAX_Z)] = 4;
+
+                        } else {
+                            //no space to build a tree with the world so we need to break out
+                            break;
+                        }
+                    } else {
+                        //since no ground block is found lets break out and look for the next x,z location at ground level 0
+                        break;
+                    }
+                }
+            } else {
+            }
+        }
+    }
+
 
     //flag the chunk to be remeshed
     chunk.dirty = true;
@@ -71,16 +118,16 @@ void ChunkBuilder::generateChunkMeshSimple(Chunk &chunk, glm::ivec2 chunkIndex) 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
-                textureData.emplace_back(1, 0, textureIndex);
                 textureData.emplace_back(0, 0, textureIndex);
-                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
-                textureData.emplace_back(0, 1, textureIndex);
                 textureData.emplace_back(1, 1, textureIndex);
-                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
 
                 // looking at x face from the right ----
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x) + 1, chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z));
@@ -103,14 +150,14 @@ void ChunkBuilder::generateChunkMeshSimple(Chunk &chunk, glm::ivec2 chunkIndex) 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 textureData.emplace_back(0, 0, textureIndex);
                 textureData.emplace_back(1, 0, textureIndex);
-                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(1, 1, textureIndex);
 
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z) + 1);
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y), chunkPosZ + static_cast<float>(z) + 1);
-                textureData.emplace_back(0, 1, textureIndex);
                 textureData.emplace_back(1, 1, textureIndex);
-                textureData.emplace_back(1, 0, textureIndex);
+                textureData.emplace_back(0, 1, textureIndex);
+                textureData.emplace_back(0, 0, textureIndex);
 
                 //looking at the y face from the top
                 vertexData.emplace_back(chunkPosX + static_cast<float>(x), chunkPosY + static_cast<float>(y) + 1, chunkPosZ + static_cast<float>(z));
@@ -149,4 +196,21 @@ void ChunkBuilder::generateChunkMeshSimple(Chunk &chunk, glm::ivec2 chunkIndex) 
     chunk.mesh.meshData = std::move(vertexData);
     chunk.mesh.textureData = std::move(textureData);
     chunk.dirty = false;
+}
+
+bool ChunkBuilder::canBuildTree(glm::vec3 location) {
+
+    if (location.y + 6  > CHUNK_MAX_Y) {
+        return false;
+    }
+
+    if (location.z - 1 >= 0 && location.z + 1 < CHUNK_MAX_Z) {
+        return false;
+    }
+
+    if (location.x - 1 >= 0 && location.x + 1 < CHUNK_MAX_X) {
+        return false;
+    }
+
+    return true;
 }

@@ -27,6 +27,7 @@ public:
     int width;
     int height;
     Camera* camera{nullptr};
+
 };
 
 
