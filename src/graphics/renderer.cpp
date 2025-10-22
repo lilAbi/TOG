@@ -103,7 +103,7 @@ void Renderer::buildTextureArray() {
 
     //generate the 2d texture array
     //glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, 128, 128, 3, 0, GL_RGB, GL_UNSIGNED_BYTE_3_3_2, nullptr);
-    glTexImage3D (GL_TEXTURE_2D_ARRAY, 0, GL_RGB, 128, 128,3, 0,  GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, 64, 64,3, 0,  GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
     //int width, height, nrChannels;
     //const unsigned char* data = stbi_load("/Users/abi/CLionProjects/TOG/resources/texture/grassgrass.png", &width, &height, &nrChannels, 0);
@@ -116,7 +116,11 @@ void Renderer::buildTextureArray() {
         int width, height, nrChannels;
         unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
         if (data) {
-            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, counter, 128, 128, 1,  GL_RGB, GL_UNSIGNED_BYTE, data);
+            if (path.ends_with("leaves.png")) {
+                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, counter, 64, 64, 1,  GL_RGBA,   GL_UNSIGNED_BYTE, data);
+            } else {
+                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, counter, 64, 64, 1,  GL_RGB, GL_UNSIGNED_BYTE, data);
+            }
             glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
         }
         counter++;

@@ -13,7 +13,7 @@
 inline std::vector<std::string> imagesToLoad{
     "/Users/abi/CLionProjects/TOG/resources/texture/grass.png",
     "/Users/abi/CLionProjects/TOG/resources/texture/wood.png",
-    "/Users/abi/CLionProjects/TOG/resources/texture/dirt.png"
+    "/Users/abi/CLionProjects/TOG/resources/texture/leaves.png"
 };
 
 //this class handles drawing
