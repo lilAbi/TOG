@@ -9,6 +9,8 @@ if(CMAKE_HOST_SYSTEM MATCHES Apple)
 #    add_link_options("-Wl,-no_compact_unwind")
 endif()
 
+add_link_options("-lpthread")
+
 include_directories(./bindings)
 include_directories(src)
 
